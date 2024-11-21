@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Vista del Chat</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f9fbfd;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        h1, h2 {
+            color: #2c3e50;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            margin-top: 30px;
+            margin-bottom: 10px;
+        }
+
+        /* Form Styles */
+        form {
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1rem;
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            display: inline-block;
+            padding: 10px 20px;
+            color: #fff;
+            background-color: #3498db;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        button:disabled {
+            background-color: #7f8c8d;
+            cursor: not-allowed;
+        }
+
+        /* Table Styles */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        /* Loading Message Styles */
+        #loading-message {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Descargar y Ver Chat de Video</h1>
+    <form method="post" onsubmit="mostrarMensajeDeEspera()">
+        <div class="form-group">
+            <label for="url">URL del Video:</label>
+            <input type="text" id="url" name="url" placeholder="Introduce la URL del video" required>
+        </div>
+        <button type="submit">Descargar Chat</button>
+    </form>
+
+    <div id="loading-message">Procesando tu solicitud, por favor espera...</div>
+
+    {% if chat_data %}
+    <h2>Mensajes del Chat</h2>
+    <table>
+        <tr>
+            <th>Tiempo</th>
+            <th>Autor</th>
+            <th>Mensaje</th>
+        </tr>
+        {% for mensaje in chat_data %}
+        <tr>
+            <td>{{ mensaje.tiempo }}</td>
+            <td>{{ mensaje.autor }}</td>
+            <td>{{ mensaje.texto }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <form method="post" action="/descargar_txt">
+        <input type="hidden" name="chat_data" value='{{ chat_data | tojson }}'>
+        <button type="submit">Descargar Mensajes como TXT</button>
+    </form>
+    {% endif %}
+
+    <script>
+        function mostrarMensajeDeEspera() {
+            const mensaje = document.getElementById('loading-message');
+            mensaje.style.display = 'block'; // Mostrar el mensaje de espera
+        }
+    </script>
+</body>
+</html>
